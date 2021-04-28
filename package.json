@@ -38,5 +38,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/react-bootstrap": "^0.32.25",
+    "react-bootstrap": "^1.5.2"
   }
 }
