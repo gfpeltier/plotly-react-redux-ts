@@ -6,7 +6,7 @@ import { selectPlotTitle, setPlotTitle } from './plotSlice';
 
 export function PlotTopSettings() {
 
-  const plotTitle = useAppSelector(selectPlotTitle)
+  const plotTitle = useAppSelector(selectPlotTitle) || ""
   const dispatch = useAppDispatch()
   const [pTitle, setPTitle] = useState(plotTitle)
 

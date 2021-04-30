@@ -18,7 +18,7 @@ export function AxisControls(props: AxisCtrlProps) {
     <div>
       <h3>{props.axis} Axis Controls</h3>
       <hr/>
-      <Form.Group controlId="plotTitle">
+      <Form.Group controlId={"axisTitle" + props.axis}>
         <Form.Label>Horizontal Axis Title</Form.Label>
         <Form.Control 
           type="text" 

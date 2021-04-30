@@ -1,7 +1,3 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-
 import './App.css';
 import { Container, Col, Row } from 'react-bootstrap';
 import { Sidebar } from './app/views/sidebar/Sidebar';

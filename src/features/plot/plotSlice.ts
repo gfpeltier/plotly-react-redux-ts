@@ -1,6 +1,8 @@
-import { combineReducers, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { createSelector } from "reselect";
 import { RootState } from "../../app/store";
+import * as Plotly from 'plotly.js'
+import { stat } from 'node:fs';
 
 
 export enum AxisOpt {
@@ -21,18 +23,15 @@ export interface PlotLayout {
   title: Title,
   xaxis: PlotAxis,
   yaxis: PlotAxis,
+  width: number,
+  height: number,
 }
 
-const initialState: PlotLayout = {
-  title: {text: "MyTitle"},
-  xaxis: {
-    orientation: AxisOpt.HORIZ,
-    title: {text: "MyHorizTitle"}
-  },
-  yaxis: {
-    orientation: AxisOpt.VERT,
-    title: {text: "MyHorizTitle"}
-  },
+const initialState: Partial<Plotly.Layout> = {
+  margin: {t: 50, l: 20, r: 20, b: 80},
+  title: {text: "My Title"},
+  'xaxis.title': "MyHorizTitle",
+  'yaxis.title': "MyVertTitle",
 }
 
 export interface AxisPayload<T> {
@@ -45,13 +44,17 @@ const plotLayoutSlice = createSlice({
   initialState,
   reducers: {
     setPlotTitle: (state, action: PayloadAction<string>) => {
-      state.title.text = action.payload
+      if (state.title && typeof(state.title) !== 'string') {
+        state.title.text = action.payload
+      } else {
+        state.title = {text: action.payload}
+      }
     },
     setAxisTitle: (state, action: PayloadAction<AxisPayload<string>>) => {
-      if (action.payload.axis == AxisOpt.HORIZ) {
-        state.xaxis.title.text = action.payload.data
+      if (action.payload.axis === AxisOpt.HORIZ) {
+        state['xaxis.title'] = action.payload.data
       } else {
-        state.yaxis.title.text = action.payload.data
+        state['yaxis.title'] = action.payload.data
       }
     },
   },
@@ -63,31 +66,34 @@ export const selectPlotLayout = (state: RootState) => state.layout
 
 export const selectPlotTitle = createSelector(
   [selectPlotLayout],
-  (layout: PlotLayout) => layout.title.text
+  (layout: Partial<Plotly.Layout>) => {
+    if (typeof(layout.title) !== 'string') return layout.title?.text
+    return ""
+  }
 )
 
 export const selectHorizAxis = createSelector(
   [selectPlotLayout],
-  (layout: PlotLayout) => layout.xaxis
+  (layout: Partial<Plotly.Layout>) => layout.xaxis
 )
 
 export const selectHorizAxisTitle = createSelector(
-  [selectHorizAxis],
-  (axis: PlotAxis) => axis.title.text
+  [selectPlotLayout],
+  (layout: Partial<Plotly.Layout>) => layout['xaxis.title']
 )
 
 export const selectVertAxis = createSelector(
   [selectPlotLayout],
-  (layout: PlotLayout) => layout.yaxis
+  (layout: Partial<Plotly.Layout>) => layout.yaxis
 )
 
 export const selectVertAxisTitle = createSelector(
-  [selectVertAxis],
-  (axis: PlotAxis) => axis.title.text
+  [selectPlotLayout],
+  (layout: Partial<Plotly.Layout>) => layout['yaxis.title']
 )
 
 export function selectPlotAxisTitle(axis: AxisOpt) {
-  return axis == AxisOpt.HORIZ ? selectHorizAxisTitle : selectVertAxisTitle
+  return axis === AxisOpt.HORIZ ? selectHorizAxisTitle : selectVertAxisTitle
 }
 
 export default plotLayoutSlice.reducer

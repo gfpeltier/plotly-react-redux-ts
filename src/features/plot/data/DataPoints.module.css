@@ -1,0 +1,17 @@
+.pointsList {
+  list-style: none;
+}
+
+.pointsList > li {
+  max-width: 150px;
+  padding: 2px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin: 4px;
+}
+
+.pointsList > li > span {
+  float: right;
+  cursor: pointer;
+  color: gray;
+}

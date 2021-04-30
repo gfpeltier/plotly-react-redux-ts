@@ -1,11 +1,13 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import counterReducer from '../features/counter/counterSlice';
 import layoutReducer from '../features/plot/plotSlice';
+import dataReducer from '../features/plot/data/dataSlice';
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
-    layout: layoutReducer
+    layout: layoutReducer,
+    data: dataReducer,
   },
 });
 
